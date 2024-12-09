@@ -89,7 +89,7 @@ function ShowProducts({ catalog, cart, setCart, cartTotal }) {
         categories={categories}
         cart={cart}
         cartTotal={cartTotal}
-        style = {{width: 100}}
+        style = {{width: '100%'}}
       />
       <div className="flex-grow-1 p-4">
         <h1>Welcome to the Product Page</h1>
