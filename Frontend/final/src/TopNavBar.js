@@ -33,14 +33,14 @@ const TopNavBar = ({
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="w-100">
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="w-100" style={{ width: '100%' }}>
       <Navbar.Brand>
         <Link to="/">
           <img
             src={Logo}
             alt="Logo"
             className="d-inline-block align-top"
-            style={{ height: "40px", marginRight: "20px"}}
+            style={{ height: "40px", marginRight: "20px", marginLeft: "20px"}}
           />
         </Link>
         {' '} NVDC Fishing

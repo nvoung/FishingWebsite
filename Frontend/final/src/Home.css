@@ -1,3 +1,48 @@
+.image-container {
+    position: relative;
+    margin-top: 0;
+}
+
+.bar-separator {
+    background-color: #343a40; /* Same color as the navbar */
+    height: 30px;
+    width: 100%;
+    margin-top: -30px;
+}
+
+.additional-containers {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.additional-container {
+    width: 100%;
+    height: 350px; /* Adjust the height as needed */
+    border: 4px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the left */
+    transition: color 0.3s, background-color 0.3s, background-image 0.3s;
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    color: black; /* Ensure text is visible on light background */
+}
+
+.additional-container:hover {
+    color: white;
+    font-weight: bold;
+    cursor: pointer; /* Indicate the container is clickable */
+}
+
+.additional-container span {
+    font-size: 24px; /* Larger text */
+    margin-left: 20px; /* Add some space between the text and the edge */
+}
+
+
+
+
 .welcome-text {
     position: absolute;
     top: 40%;
@@ -6,6 +51,7 @@
     text-align: center;
     color: black;
     animation: fadeIn 2s;
+    z-index: 2; /* Ensure the text is above the gradient */
 }
 
 .welcome-text h1,

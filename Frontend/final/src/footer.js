@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-light py-3 mt-auto">
+    <footer className="bg-dark text-light py-3 mt-auto" style={{width: '100%'}}>
       <Container>
         <Row>
           <Col className="text-end">
