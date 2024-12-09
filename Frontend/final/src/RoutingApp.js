@@ -4,6 +4,7 @@ import ShowProducts from "./App";
 import CartCheckout from "./CartCheckout";
 import PurchaseInfo from "./PurchaseInfo";
 import ProductDetail from "./ProductDetail";
+import Home from "./Home";
 
 function RoutingApp() {
   const [catalog, setCatalog] = useState([]);
@@ -38,7 +39,8 @@ function RoutingApp() {
 
   return (
       <Routes>
-        <Route path="/" element={<ShowProducts catalog={catalog} cart={cart} setCart={setCart} cartTotal={cartTotal} />} />
+        <Route path="/" element={<Home catalog={catalog} />} />
+        <Route path="/product" element={<ShowProducts catalog={catalog} cart={cart} setCart={setCart} cartTotal={cartTotal} />} />
         <Route path="/checkout" element={<CartCheckout />} />
         <Route path="/purchase" element={<PurchaseInfo />} />
         <Route path="/product/:id" element={<ProductDetail catalog={catalog} cart={cart} setCart={setCart} cartTotal={cartTotal} />} />

@@ -1,0 +1,24 @@
+.welcome-text {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: black;
+    animation: fadeIn 2s;
+}
+
+.welcome-text h1,
+.welcome-text p,
+.welcome-text button {
+    margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

@@ -35,7 +35,7 @@ function ProductDetail({ catalog, cart, setCart, cartTotal }) {
   };
 
   const goBack = () => {
-    navigate('/');
+    navigate('/product');
   };
 
   const goToProductDetail = (productId) => {

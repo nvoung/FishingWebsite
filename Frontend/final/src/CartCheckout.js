@@ -18,7 +18,7 @@ function CartCheckout() {
   };
 
   const handleBack = () => {
-    navigate('/', { state: { cart, cartTotal } });
+    navigate('/product', { state: { cart, cartTotal } });
   };
 
   return (

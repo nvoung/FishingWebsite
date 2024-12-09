@@ -13,7 +13,7 @@ function PurchaseInfo() {
   }; // Extract last four digits of card number
   // const lastFourDigits = (typeof cardNumber === 'string' && cardNumber.length >= 4) ? cardNumber.substring(cardNumber.length - 4) : "0000";
   const handleBackToProducts = () => {
-    navigate("/");
+    navigate("/products");
   };
   return (
     <div>
