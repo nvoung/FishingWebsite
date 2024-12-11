@@ -5,6 +5,7 @@ import CartCheckout from "./CartCheckout";
 import PurchaseInfo from "./PurchaseInfo";
 import ProductDetail from "./ProductDetail";
 import Home from "./Home";
+import Author from "./Author";
 
 function RoutingApp() {
   const [catalog, setCatalog] = useState([]);
@@ -40,6 +41,7 @@ function RoutingApp() {
   return (
       <Routes>
         <Route path="/" element={<Home catalog={catalog} />} />
+        <Route path="/about" element ={<Author/>} /> 
         <Route path="/product" element={<ShowProducts catalog={catalog} cart={cart} setCart={setCart} cartTotal={cartTotal} />} />
         <Route path="/checkout" element={<CartCheckout />} />
         <Route path="/purchase" element={<PurchaseInfo />} />
