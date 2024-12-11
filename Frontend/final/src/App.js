@@ -92,7 +92,6 @@ function ShowProducts({ catalog, cart, setCart, cartTotal }) {
         style = {{width: '100%'}}
       />
       <div className="flex-grow-1 p-4">
-        <h1>Welcome to the Product Page</h1>
         <Row>
           {filteredCatalog.map((product) => (
             <Col key={product.id} md={4}>
