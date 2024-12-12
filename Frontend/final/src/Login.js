@@ -1,33 +1,42 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { set } from 'react-hook-form';
 const Authentication = ({setUserRole }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+    const navigate = useNavigate();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		const response = await fetch('http://localhost:8081/login', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username, password }),
-		});
-
 		try {
+			const response = await fetch('/adminAccount.json');
 			if (!response.ok) {
 				const errorData = await response.json();
 				setError(errorData.error);
 				return;
 			}
-			const { role } = await response.json();
-			setUserRole(role);
+			const accounts = await response.json();
+			const user = accounts.find(
+				(account) =>
+					account.username === username && account.password === password
+			);
+			if (user) {
+				// const { role } = await response.json();
+				setUserRole("admin");
+                navigate('/');
+			} 
+            else {
+				setError('Invalid username or password.');
+			}
 		} catch (err) {
-			console.log('Failed to log in. Please try again.' + err);
+			console.log('Failed to log in. Pslease try again.' + err);
 			setError('Failed to log in. Please try again. ' + err);
 		}
 	};
 	return (
 		<div className="container mt-4">
-			<h2 className="text-center">Login</h2>
+			<h2 className="text-center">Admin Login</h2>
 			<form onSubmit={handleLogin}>
 				<div className="mb-3">
 					<label className="form-label">Username</label>
@@ -53,6 +62,7 @@ const Authentication = ({setUserRole }) => {
 				<button type="submit" className="btn btn-primary">
 					Login
 				</button>
+               
 			</form>
 		</div>
 	);

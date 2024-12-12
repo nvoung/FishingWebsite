@@ -13,6 +13,11 @@ const Footer = () => {
               About Us
             </Link>
           </Col>
+          <Col className='text-end'>
+          <Link to="/login" className='text-light'>
+            Admin
+          </Link>
+          </Col>
         </Row>
       </Container>
     </footer>

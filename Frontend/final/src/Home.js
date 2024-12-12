@@ -60,12 +60,6 @@ const Home = ({ catalog }) => {
 					NVDC Fishing
 				</a>
 			</nav>
-			{/* Link to login and return login*/}
-      <nav className='nav-item'>
-        <Link to='/login' className="nav-link text-dark">
-          Login
-        </Link>
-      </nav>
 
 			<div style={{ backgroundColor: '#D3D3D3', paddingTop: '0px' }}>
 				<Row className="position-relative" style={{ marginTop: 0 }}>

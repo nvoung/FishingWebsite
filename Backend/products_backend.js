@@ -68,29 +68,14 @@ app.get('/listcategories', async (req, res) => {
 		res.status(500).send('Internal Server Error');
 	}
 });
-//Get a Fishing Rods
-app.get('/fishingRods', async (req, res) => {
-	const { type } = req.params;
-	await client.connect();
-	console.log('fishingRob connected to GET');
-	const query = {};
-	const results = await db.collection('Final').find(query).limit(100).toArray();
-	console.log(results);
-	res.status(200);
-	res.send(results);
-	try {
-	} catch (err) {
-		console.error({ error: 'An unexpected error occurred' + err });
-		res.status(500).send({ error: 'An unexpected error occurred' + err });
-	}
-});
-app.get('/fishingRods/:id', async (req, res) => {
-	const fishingRodId = Number(req.params.id);
-	console.log('Robot to find: ', fishingRodId);
+//Get Item by Id
+app.get('/item/:id', async (req, res) => {
+	const itemId = Number(req.params.id);
+	console.log('Robot to find: ', itemId);
 	try {
 		await client.connect();
 		console.log('Node connected successfully to GET-id MongoDB');
-		const query = { id: fishingRodId };
+		const query = { id: itemId };
 		const result = await db.collection('Final').findOne(query);
 		console.log('Results: ', result);
 		if (!result) res.send('Not Found').status(404);
@@ -102,8 +87,8 @@ app.get('/fishingRods/:id', async (req, res) => {
 	}
 });
 
-//POST a new fishing rod
-app.post('/fishingRods', upload.single('image'), async (req, res) => {
+//POST a new item
+app.post('/item', upload.single('image'), async (req, res) => {
 	try {
 		await client.connect();
 		const newDocument = {
@@ -126,8 +111,8 @@ app.post('/fishingRods', upload.single('image'), async (req, res) => {
 			.json({ error: 'An unexpected error occurred: ' + err.message });
 	}
 });
-//UPDATE a fishingRod
-app.put('/fishingRods/:id', async (req, res) => {
+//UPDATE an item info
+app.put('/item/:id', async (req, res) => {
 	const id = Number(req.params.id);
 	console.log('Robot to Update: ', id);
 	try {
@@ -161,17 +146,17 @@ app.put('/fishingRods/:id', async (req, res) => {
 		});
 	}
 });
-//DELETE a specific fishing Rod
-app.delete('/fishingRods/:id', async (req, res) => {
+//DELETE a specific item by id
+app.delete('/item/:id', async (req, res) => {
 	try {
 		const id = Number(req.params.id);
 		console.log('Robot to delete: ', id);
 		await client.connect();
 		const query = { id };
 		//check to see if available
-		const rodDeleted = await db.collection('Final').findOne(query);
+		const itemDeleted = await db.collection('Final').findOne(query);
 		res.status(200);
-		res.send(rodDeleted);
+		res.send(itemDeleted);
 		// Delete
 		const results = await db.collection('Final').deleteOne(query);
 		console.log(results);
@@ -207,9 +192,6 @@ app.post('/jetski', async (req, res) => {});
 app.put('/jetski', async (req, res) => {});
 app.delete('/jetski/:id', (req, res) => {});
 
-// app.listen(port, () => {
-// 	console.log(`App listening at http://localhost:${port}`);
-// });
 app.listen(port, () => {
 	console.log('App listening at http://%s:%s', host, port);
 });
