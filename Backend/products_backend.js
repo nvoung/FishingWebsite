@@ -1,56 +1,215 @@
-var express = require("express");
-var cors = require("cors");
-var fs = require("fs");
-var bodyParser = require("body-parser");
+const { MongoClient } = require('mongodb');
+// MongoDB
+const multer = require('multer');
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'uploads/'); // Save images in the 'uploads' folder
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+	},
+});
+const upload = multer({ storage: storage });
+// Create "uploads" folder if it doesn't exist
+const fs = require('fs');
+if (!fs.existsSync('uploads')) {
+	fs.mkdirSync('uploads');
+}
+const url = 'mongodb://127.0.0.1:27017';
+const dbName = 'secoms319';
+const client = new MongoClient(url);
+// Server
+var express = require('express');
+var cors = require('cors');
+var bodyParser = require('body-parser');
+const { default: cluster } = require('cluster');
+const { title } = require('process');
 var app = express();
-
 app.use(cors());
 app.use(bodyParser.json());
+const port = '8081';
+const host = 'localhost';
+app.use(express.json());
+app.use(express.static('public'));
+app.use('/uploads', express.static('uploads')); // Serve images statically
 
-const port = "8081";
-const host = "localhost";
+// async function startServer() {
+// await client.connect();
+const db = client.db(dbName);
+console.log('Connected to MongoDB');
 
-const { MongoClient } = require("mongodb");
-// MongoDB
-const url = "mongodb://127.0.0.1:27017";
-const dbName = "secoms319";
-const client = new MongoClient(url);
+// app.listen(port, () => {
+// 	console.log('App listening at http://%s:%s', host, port);
+// });
+// }
 
-let db;
+// startServer();
+//GET all products
+app.get('/listproducts', async (req, res) => {
+	console.log('Node connected successfully to GET MongoDB');
 
-async function startServer() {
-  await client.connect();
-  db = client.db(dbName);
-  console.log("Connected to MongoDB");
+	const query = {};
+	const results = await db.collection('Final').find(query).limit(100).toArray();
+	console.log(results);
 
-  app.listen(port, () => {
-    console.log("App listening at http://%s:%s", host, port);
-  });
-}
+	res.status(200).send(results);
+});
+//Get All Categories
+app.get('/listcategories', async (req, res) => {
+	console.log('Node connected successfully to GET MongoDB');
 
-startServer();
+	try {
+		const categories = await db.collection('Final').distinct('category');
+		console.log(categories);
 
-app.get("/listproducts", async (req, res) => {
-  console.log("Node connected successfully to GET MongoDB");
-
-  const query = {};
-  const results = await db.collection("Final").find(query).limit(100).toArray();
-  console.log(results);
-
-  res.status(200).send(results);
+		res.status(200).send(categories);
+	} catch (error) {
+		console.error('Error retrieving categories:', error);
+		res.status(500).send('Internal Server Error');
+	}
+});
+//Get a Fishing Rods
+app.get('/fishingRods', async (req, res) => {
+	const { type } = req.params;
+	await client.connect();
+	console.log('fishingRob connected to GET');
+	const query = {};
+	const results = await db.collection('Final').find(query).limit(100).toArray();
+	console.log(results);
+	res.status(200);
+	res.send(results);
+	try {
+	} catch (err) {
+		console.error({ error: 'An unexpected error occurred' + err });
+		res.status(500).send({ error: 'An unexpected error occurred' + err });
+	}
+});
+app.get('/fishingRods/:id', async (req, res) => {
+	const fishingRodId = Number(req.params.id);
+	console.log('Robot to find: ', fishingRodId);
+	try {
+		await client.connect();
+		console.log('Node connected successfully to GET-id MongoDB');
+		const query = { id: fishingRodId };
+		const result = await db.collection('Final').findOne(query);
+		console.log('Results: ', result);
+		if (!result) res.send('Not Found').status(404);
+		else res.send(result).status(200);
+	} catch (err) {
+		console.log('Error retreiving data');
+		res.status(500);
+		res.send({ error: 'An internal server error occurred' });
+	}
 });
 
-app.get("/listcategories", async (req, res) => {
-    console.log("Node connected successfully to GET MongoDB");
-  
-    try {
-      const categories = await db.collection("Final").distinct("category");
-      console.log(categories);
-  
-      res.status(200).send(categories);
-    } catch (error) {
-      console.error("Error retrieving categories:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
+//POST a new fishing rod
+app.post('/fishingRods', upload.single('image'), async (req, res) => {
+	try {
+		await client.connect();
+		const newDocument = {
+			id: req.body.id,
+			title: req.body.title,
+			price: req.body.price,
+			category: req.body.category,
+			image: req.body.image,
+		};
+		console.log(newDocument);
+		//post to MongoDB
+		const result = await db.collection('Final').insertOne(newDocument);
+		res.status(200);
+		res.send(result);
+	} catch (err) {
+		// Handle synchronous errors
+		console.error('Error in POST /contact:', err);
+		res
+			.status(500)
+			.json({ error: 'An unexpected error occurred: ' + err.message });
+	}
+});
+//UPDATE a fishingRod
+app.put('/fishingRods/:id', async (req, res) => {
+	const id = Number(req.params.id);
+	console.log('Robot to Update: ', id);
+	try {
+		await client.connect();
+		const query = { id: id };
+		console.log(req.body);
+		const updateData = {
+			$set: {
+				id: req.body.id,
+				title: req.body.title,
+				price: req.body.price,
+				category: req.body.category,
+				image: req.body.image,
+			},
+		};
+		const rodUpdated = await db.collection('Final').findOne(query);
+		res.status(200);
+		res.send(rodUpdated);
+		// Add options if needed, for example { upsert: true } to create a document if it doesn't exist
+		const options = {};
+		const results = await db
+			.collection('Final')
+			.updateOne(query, updateData, options);
+		res.status(200); // Response to Client
+		res.send(results);
+	} catch {
+		// Handle synchronous errors
+		console.error('Error in UPDATE /contact:', err);
+		res.status(500).send({
+			error: 'An unexpected error occurred in UPDATE: ' + err.message,
+		});
+	}
+});
+//DELETE a specific fishing Rod
+app.delete('/fishingRods/:id', async (req, res) => {
+	try {
+		const id = Number(req.params.id);
+		console.log('Robot to delete: ', id);
+		await client.connect();
+		const query = { id };
+		//check to see if available
+		const rodDeleted = await db.collection('Final').findOne(query);
+		res.status(200);
+		res.send(rodDeleted);
+		// Delete
+		const results = await db.collection('Final').deleteOne(query);
+		console.log(results);
+		// Response to Client
+		res.status(200);
+		res.send(results);
+	} catch (err) {
+		// Handle synchronous errors
+		console.error('Error in DELETE /contact:', err);
+		res.status(500).send({
+			error: 'An unexpected error occurred in DELETE: ' + err.message,
+		});
+	}
+});
+
+app.get('/fishingReels', async (req, res) => {});
+app.post('/fishingReels', async (req, res) => {});
+app.put('/fishingReels', async (req, res) => {});
+app.delete('/fishingReels/:id', (req, res) => {});
+
+app.get('/fishingLures', async (req, res) => {});
+app.post('/fishingLures', async (req, res) => {});
+app.put('/fishingLures', async (req, res) => {});
+app.delete('/fishingLures/:id', (req, res) => {});
+
+app.get('/boats', async (req, res) => {});
+app.post('/boats', async (req, res) => {});
+app.put('/boats', async (req, res) => {});
+app.delete('/boats/:id', (req, res) => {});
+
+app.get('/jetski', async (req, res) => {});
+app.post('/jetski', async (req, res) => {});
+app.put('/jetski', async (req, res) => {});
+app.delete('/jetski/:id', (req, res) => {});
+
+// app.listen(port, () => {
+// 	console.log(`App listening at http://localhost:${port}`);
+// });
+app.listen(port, () => {
+	console.log('App listening at http://%s:%s', host, port);
+});
