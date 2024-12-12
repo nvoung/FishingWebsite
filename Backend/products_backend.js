@@ -172,25 +172,6 @@ app.delete('/item/:id', async (req, res) => {
 	}
 });
 
-app.get('/fishingReels', async (req, res) => {});
-app.post('/fishingReels', async (req, res) => {});
-app.put('/fishingReels', async (req, res) => {});
-app.delete('/fishingReels/:id', (req, res) => {});
-
-app.get('/fishingLures', async (req, res) => {});
-app.post('/fishingLures', async (req, res) => {});
-app.put('/fishingLures', async (req, res) => {});
-app.delete('/fishingLures/:id', (req, res) => {});
-
-app.get('/boats', async (req, res) => {});
-app.post('/boats', async (req, res) => {});
-app.put('/boats', async (req, res) => {});
-app.delete('/boats/:id', (req, res) => {});
-
-app.get('/jetski', async (req, res) => {});
-app.post('/jetski', async (req, res) => {});
-app.put('/jetski', async (req, res) => {});
-app.delete('/jetski/:id', (req, res) => {});
 
 app.listen(port, () => {
 	console.log('App listening at http://%s:%s', host, port);
