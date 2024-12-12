@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { set } from 'react-hook-form';
-const Authentication = ({setUserRole }) => {
+const Authentication = ({ setUserRole }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
@@ -23,7 +23,7 @@ const Authentication = ({setUserRole }) => {
 			);
 			if (user) {
 				// const { role } = await response.json();
-				setUserRole("admin");
+				setUserRole(user);
                 navigate('/');
 			} 
             else {
