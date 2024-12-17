@@ -53,7 +53,7 @@ console.log('Connected to MongoDB');
 // });
 //  }
 //  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.post();
+//app.post();
 
 //  startServer();
 //GET all products
