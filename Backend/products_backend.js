@@ -10,6 +10,16 @@ const storage = multer.diskStorage({
 	},
 });
 const upload = multer({ storage: storage });
+// const image = multer({
+// 	dest: 'uploads/', // Directory to save uploaded files
+// 	limits: { fileSize: 10 * 1024 * 1024 }, // Max file size: 10MB
+// 	fileFilter(req, file, cb) {
+// 		if (!file.originalname.match(`\.(jpg|jpeg|png|gif|avif)$`)) {
+// 			return cb(new Error('Please upload an image file.'));
+// 		}
+// 		cb(null, true);
+// 	},
+// });
 // Create "uploads" folder if it doesn't exist
 const fs = require('fs');
 if (!fs.existsSync('uploads')) {
@@ -42,6 +52,8 @@ console.log('Connected to MongoDB');
 // 	console.log('App listening at http://%s:%s', host, port);
 // });
 // }
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.post();
 
 // startServer();
 //GET all products
@@ -86,17 +98,28 @@ app.get('/item/:id', async (req, res) => {
 		res.send({ error: 'An internal server error occurred' });
 	}
 });
+//Count of ID
+app.get('/products/count', async (req, res) => {
+	try {
+		const count = await db.collection('Final').countDocuments();
+		res.status(200).send({ count });
+	} catch (err) {
+		res.status(500).send({ error: 'Failed to fetch product count' });
+	}
+});
 
 //POST a new item
 app.post('/add-item', upload.single('image'), async (req, res) => {
+	const { title, price, category, id } = req.body;
+	const image = req.file ? req.file.path : null;
 	try {
 		await client.connect();
 		const newDocument = {
-			id: req.body.id,
-			title: req.body.title,
-			price: req.body.price,
-			category: req.body.category,
-			image: req.body.image,
+			id: parseFloat(id),
+			title,
+			price: parseFloat(price),
+			category,
+			image,
 		};
 		console.log(newDocument);
 		//post to MongoDB

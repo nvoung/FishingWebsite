@@ -141,8 +141,9 @@ function ShowProducts({ catalog, cart, setCart, cartTotal, userRole }) {
 									<Card.Text>
 										<strong>Price:</strong> ${product.price} <br />
 										<strong>Category:</strong> {product.category} <br />
-										<strong>Rating:</strong> {product.rating.rate} (
-										{product.rating.count} reviews)
+										<strong>Rating:</strong>
+										{product.rating ? product.rating.rate : 'N/A'} (
+										{product.rating ? product.rating.count : '0'} reviews)
 									</Card.Text>
 									<div className="d-flex justify-content-between align-items-center">
 										<Button

@@ -1,23 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function AddItem() {
 	const [product, setProduct] = useState({
+		id: '',
 		title: '',
 		price: '',
 		category: '',
 		image: null,
+		rating: { rate: 0, count: 0 },
 	});
 	const [preview, setPreview] = useState(null);
+	const [productCount, setProductCount] = useState(0);
+
+	useEffect(() => {
+		const fetchProductCount = async () => {
+			try {
+				const response = await fetch('http://localhost:8081/products/count');
+				const data = await response.json();
+				setProductCount(data.count); // Store the current number of products
+			} catch (err) {
+				console.error('Error fetching product count:', err);
+			}
+		};
+		fetchProductCount();
+	}, []);
+
+	const generateId = () => {
+		return parseFloat(productCount) + 1; // The new product will have an ID of one more than the current count
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const priceNumber = parseFloat(product.price);
+		const newProduct = {
+			...product,
+			id: generateId(),
+			price: priceNumber,
+		};
+		// const product = location.state?.product || {
+		// 	rating: { rate: 0, count: 0 },
+		// };
 		// Call this function to fetch backend with method POST
 		const formData = new FormData();
-		formData.append('image', product.image); // Add the file to the form data
-		formData.append('title', product.title);
-		formData.append('category', product.category);
-		formData.append('price', product.price);
+		formData.append('id', newProduct.id);
+		formData.append('image', newProduct.image); // Add the file to the form data
+		formData.append('title', newProduct.title);
+		formData.append('category', newProduct.category);
+		formData.append('price', newProduct.price);
+		formData.append('rating', JSON.stringify(newProduct.rating));
 		try {
 			const response = await fetch('http://localhost:8081/add-item', {
 				method: 'POST',
@@ -26,7 +57,14 @@ function AddItem() {
 			});
 			if (response.ok) {
 				alert('Product added successfully');
-				setProduct({ title: '', price: '', category: '', image: null });
+				setProduct({
+					id: '',
+					title: '',
+					price: '',
+					category: '',
+					image: null,
+					rating: { rate: 0, count: 0 },
+				});
 				setPreview(null);
 			} else {
 				// Status code 201 indicates success
@@ -40,7 +78,7 @@ function AddItem() {
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
 		setProduct({ ...product, image: file });
-		if (file) {
+		if (file) {	
 			setPreview(URL.createObjectURL(file)); // Show preview
 		}
 	};
