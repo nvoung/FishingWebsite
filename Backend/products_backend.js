@@ -6,10 +6,10 @@ const storage = multer.diskStorage({
 		cb(null, 'uploads/'); // Save images in the 'uploads' folder
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + file.originalname); // Unique filename
+		cb(null, Date.now() + '-' + path.extname(file.originalname)); // Unique filename
 	},
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage : storage });
 // const image = multer({
 // 	dest: 'uploads/', // Directory to save uploaded files
 // 	limits: { fileSize: 10 * 1024 * 1024 }, // Max file size: 10MB
@@ -30,7 +30,7 @@ const dbName = 'secoms319';
 const client = new MongoClient(url);
 // Server
 const express = require('express');
-var cors = require('cors');
+const cors = require('cors');
 var bodyParser = require('body-parser');
 const { default: cluster } = require('cluster');
 const { title } = require('process');
@@ -51,11 +51,11 @@ console.log('Connected to MongoDB');
 // app.listen(port, () => {
 // 	console.log('App listening at http://%s:%s', host, port);
 // });
-// }
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+//  }
+//  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.post();
 
-// startServer();
+//  startServer();
 //GET all products
 app.get('/listproducts', async (req, res) => {
 	console.log('Node connected successfully to GET MongoDB');
@@ -98,7 +98,7 @@ app.get('/item/:id', async (req, res) => {
 		res.send({ error: 'An internal server error occurred' });
 	}
 });
-//Count of ID
+// //Count of ID
 app.get('/products/count', async (req, res) => {
 	try {
 		const count = await db.collection('Final').countDocuments();

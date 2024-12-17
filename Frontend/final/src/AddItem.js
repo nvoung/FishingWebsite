@@ -17,6 +17,9 @@ function AddItem() {
 		const fetchProductCount = async () => {
 			try {
 				const response = await fetch('http://localhost:8081/products/count');
+				if(!response.ok){
+					throw new Error("Failed to fetch count");
+				}
 				const data = await response.json();
 				setProductCount(data.count); // Store the current number of products
 			} catch (err) {
