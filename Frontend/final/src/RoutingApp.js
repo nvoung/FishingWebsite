@@ -55,57 +55,59 @@ function RoutingApp() {
 	}, [cart, cartTotal]);
 
 	return (
-		<div className='RoutingApp'>
-			
-		<Routes>
-			<Route path="/" element={<Home catalog={catalog} />} />
-			<Route path="/about" element={<Author />} />
-			<Route
-				path="/product"
-				element={
-					<ShowProducts
-						catalog={catalog}
-						cart={cart}
-						setCart={setCart}
-						cartTotal={cartTotal}
-						userRole={userRole}
-					/>
-				}
-			/>
-			<Route path="/checkout" element={<CartCheckout />} />
-			<Route path="/purchase" element={<PurchaseInfo />} />
-			<Route
-				path="/product/:id"
-				element={
-					<ProductDetail
-						catalog={catalog}
-						cart={cart}
-						setCart={setCart}
-						cartTotal={cartTotal}
-					/>
-				}
-			/>
-			<Route
-				path="/login"
-				element={
-					<Authentication
-						username={username}
-						setUsername={setUsername}
-						password={password}
-						setPassword={setPassword}
-						setUserRole={setUserRole}
-					/>
-				}
-			/>
-			{userRole === 'admin' && (
-				<>
-					<Route path="/item" element={<AddItem />} />
-					<Route path="/item/:id" element={<DeleteItem />} />
-					<Route path="/item/:id" element={<UpdateItem />} />
-				</>
-			)}
-		</Routes>
-
+		<div className="RoutingApp">
+			<Routes>
+				<Route path="/" element={<Home catalog={catalog} />} />
+				<Route path="/about" element={<Author />} />
+				<Route
+					path="/product"
+					element={
+						<ShowProducts
+							catalog={catalog}
+							cart={cart}
+							setCart={setCart}
+							cartTotal={cartTotal}
+							userRole={userRole}
+						/>
+					}
+				/>
+				<Route path="/checkout" element={<CartCheckout />} />
+				<Route path="/purchase" element={<PurchaseInfo />} />
+				<Route
+					path="/product/:id"
+					element={
+						<ProductDetail
+							catalog={catalog}
+							cart={cart}
+							setCart={setCart}
+							cartTotal={cartTotal}
+						/>
+					}
+				/>
+				<Route
+					path="/login"
+					element={
+						<Authentication
+							username={username}
+							setUsername={setUsername}
+							password={password}
+							setPassword={setPassword}
+							setUserRole={setUserRole}
+						/>
+					}
+				/>
+				<Route
+					path="/listproducts"
+					element={<ShowProducts userRole={userRole} />}
+				/>
+				{/* {userRole === 'admin' && ( */}
+					{/* <> */}
+						<Route path="/add-item" element={<AddItem />} />
+						<Route path="/delete-item/:id" element={<DeleteItem />} />
+						<Route path="/update-item/:id" element={<UpdateItem />} />
+					{/* </> */}
+				{/* )} */}
+			</Routes>
 		</div>
 	);
 }

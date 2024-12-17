@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
 		cb(null, 'uploads/'); // Save images in the 'uploads' folder
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+		cb(null, Date.now() + '-' + file.originalname); // Unique filename
 	},
 });
 const upload = multer({ storage: storage });
@@ -19,12 +19,12 @@ const url = 'mongodb://127.0.0.1:27017';
 const dbName = 'secoms319';
 const client = new MongoClient(url);
 // Server
-var express = require('express');
+const express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 const { default: cluster } = require('cluster');
 const { title } = require('process');
-var app = express();
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 const port = '8081';
@@ -111,33 +111,68 @@ app.post('/add-item', upload.single('image'), async (req, res) => {
 			.json({ error: 'An unexpected error occurred: ' + err.message });
 	}
 });
+//login
+app.post('/login', (req, res) => {
+	const { username, password } = req.body;
+
+	if (!username || !password) {
+		return res
+			.status(400)
+			.send({ error: 'Username and password are required.' });
+	}
+	const adminAccountsPath = path.join(__dirname, 'adminAccount.json');
+	fs.readFile(adminAccountsPath, 'utf8', (err, data) => {
+		if (err) {
+			return res
+				.status(500)
+				.send({ error: 'An error occured accessing admin account' });
+		}
+		const adminAccounts = JSON.parse(data);
+		const account = adminAccounts.find(
+			(account) =>
+				account.username === username && account.password === password
+		);
+		if (!account) {
+			return res.status(401).send({ error: 'Invalid username or password' });
+		}
+		res.status(200).send({ role: account.role });
+	});
+});
 //UPDATE an item info
-app.put('/update-item/:id', async (req, res) => {
-	const id = Number(req.params.id);
-	console.log('Robot to Update: ', id);
+app.put('/update-item/:id', upload.single('image'), async (req, res) => {
+	const productId = req.params.id;
+	const { title, price, category } = req.body;
+	const image = req.file ? req.file.path : null;
+
 	try {
 		await client.connect();
-		const query = { id: id };
-		console.log(req.body);
+		const query = { id: productId };
+
 		const updateData = {
 			$set: {
-				id: req.body.id,
-				title: req.body.title,
-				price: req.body.price,
-				category: req.body.category,
-				image: req.body.image,
+				title,
+				price,
+				category,
+				image,
 			},
 		};
-		const rodUpdated = await db.collection('Final').findOne(query);
-		res.status(200);
-		res.send(rodUpdated);
-		// Add options if needed, for example { upsert: true } to create a document if it doesn't exist
-		const options = {};
-		const results = await db
+		const rodUpdated = await db
 			.collection('Final')
-			.updateOne(query, updateData, options);
-		res.status(200); // Response to Client
-		res.send(results);
+			.updateOne(query, updateData);
+		if (rodUpdated.matchedCount > 0) {
+			res.status(200).json({ message: 'product updated' });
+		} else {
+			res.status(404).json({ error: 'Product not found' });
+		}
+
+		// res.send(rodUpdated);
+		// // Add options if needed, for example { upsert: true } to create a document if it doesn't exist
+		// const options = {};
+		// const results = await db
+		// 	.collection('Final')
+		// 	.updateOne(query, updateData, options);
+		// res.status(200); // Response to Client
+		// res.send(results);
 	} catch {
 		// Handle synchronous errors
 		console.error('Error in UPDATE /contact:', err);
@@ -171,7 +206,6 @@ app.delete('/delete-item/:id', async (req, res) => {
 		});
 	}
 });
-
 
 app.listen(port, () => {
 	console.log('App listening at http://%s:%s', host, port);

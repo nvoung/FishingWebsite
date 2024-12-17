@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { set } from 'react-hook-form';
 const Authentication = ({ setUserRole }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		try {
-			const response = await fetch('/adminAccount.json');
-			if (!response.ok) {
-				const errorData = await response.json();
-				setError(errorData.error);
-				return;
-			}
-			const accounts = await response.json();
-			const user = accounts.find(
-				(account) =>
-					account.username === username && account.password === password
-			);
-			if (user) {
-				// const { role } = await response.json();
-				setUserRole(user.setUserRole);
-                navigate('/');
-			} 
-            else {
-				setError('Invalid username or password.');
-			}
-		} catch (err) {
-			console.log('Failed to log in. Pslease try again.' + err);
-			setError('Failed to log in. Please try again. ' + err);
+
+		const response = await fetch('/adminAccount.json');
+		const accounts = await response.json();
+		// 	{
+		// 	method: 'POST',
+		// 	headers: { 'Content-Type': 'application/json' },
+		// 	body: JSON.stringify({ username, password }),
+		// });
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			setError(errorData.error);
+			return;
+		}
+
+		const user = accounts.find(
+			(account) =>
+				account.username === username && account.password === password
+		);
+		if (user) {
+			// const { role } = await response.json();
+			setUserRole(user.role);
+			alert('User is an: ' + user.role);
+			navigate('/');
+		} else {
+			setError('Invalid username or password.');
 		}
 	};
 	return (
@@ -62,7 +64,6 @@ const Authentication = ({ setUserRole }) => {
 				<button type="submit" className="btn btn-primary">
 					Login
 				</button>
-               
 			</form>
 		</div>
 	);

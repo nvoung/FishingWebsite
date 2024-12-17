@@ -19,9 +19,10 @@ function ShowProducts({ catalog, cart, setCart, cartTotal, userRole }) {
 	const [categories, setCategories] = useState([]);
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [search, setSearch] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	//const [userRole, setUserRole] = useState(null);
+	// const [userRole, setUserRole] = useState(null);
 
 	useEffect(() => {
 		const fetchCategories = async () => {

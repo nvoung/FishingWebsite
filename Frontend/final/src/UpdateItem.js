@@ -28,18 +28,23 @@ function UpdateItem() {
 
 	const handleUpdate = async (e) => {
 		// Send updated data to the backend (update the database)
-		const updateProduct = {
-			title,
-			price,
-			category,
-			image: image ? image : product.image,
-		};
+
 		try {
-			const response = await fetch(`http://localhost:8081/item/${product.id}`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ title, price, category }),
-			});
+			const formData = new FormData();
+			formData.append('title', product.title);
+			formData.append('category', product.category);
+			formData.append('price', product.price);
+			if (image) {
+				formData.append('image', image); // Add the file to the form data
+			}
+			const response = await fetch(
+				`http://localhost:8081/update-item/${product.id}`,
+				{
+					method: 'PUT',
+					// headers: { 'Content-Type': 'application/json' },
+					body: formData,
+				}
+			);
 			if (response.ok) {
 				navigate('/'); // Redirect to product list or wherever you want
 			} else {

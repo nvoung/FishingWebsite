@@ -34,7 +34,7 @@ function DeleteItem() {
 	// Delete a contact by ID
 	const deleteOneContact = async (id) => {
 		try {
-			const response = await fetch(`http://localhost:8081/item/${id}`, {
+			const response = await fetch(`http://localhost:8081/delete-item/${id}`, {
 				method: 'DELETE',
 			});
 			// Http status code 200, 201 is ok
