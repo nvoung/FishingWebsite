@@ -16,7 +16,7 @@ function DeleteItem() {
 		}
 		try {
 			const response = await fetch(
-				`http://localhost:8081/contact/name?contact_name=${encodeURIComponent(
+				`http://localhost:8081/item/name?contact_name=${encodeURIComponent(
 					contactName
 				)}`
 			);
@@ -34,7 +34,7 @@ function DeleteItem() {
 	// Delete a contact by ID
 	const deleteOneContact = async (id) => {
 		try {
-			const response = await fetch(`http://localhost:8081/contact/${id}`, {
+			const response = await fetch(`http://localhost:8081/item/${id}`, {
 				method: 'DELETE',
 			});
 			// Http status code 200, 201 is ok
@@ -43,7 +43,7 @@ function DeleteItem() {
 			}
 			alert('Contact deleted successfully');
 			// Refresh the contacts list after deletion
-			setContactsQuery(contactsQuery.filter((contact) => contact.id !== id));
+			setContactsQuery(contactsQuery.filter((item) => item.id !== id));
 		} catch (err) {
 			alert('There was an error deleting the contact: ' + err);
 		}
@@ -51,7 +51,7 @@ function DeleteItem() {
 	return (
 		<div className="container">
 			{/* Input name or partial name for FETCH */}
-			<h2 className="text-center mt-4">Delete Contact</h2>
+			<h2 className="text-center mt-4">Delete Item</h2>
 			<div className="input-group mb-3">
 				<input
 					type="text"
@@ -103,4 +103,4 @@ function DeleteItem() {
 		</div>
 	);
 }
-export default DeleteContact;
+export default DeleteItem;

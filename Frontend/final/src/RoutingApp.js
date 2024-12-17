@@ -12,6 +12,9 @@ import ProductDetail from './ProductDetail';
 import Home from './Home';
 import Author from './Author';
 import Authentication from './Login';
+import DeleteItem from './DeleteItem';
+import AddItem from './AddItem';
+import UpdateItem from './UpdateItem';
 
 function RoutingApp() {
 	const [catalog, setCatalog] = useState([]);
@@ -52,7 +55,8 @@ function RoutingApp() {
 	}, [cart, cartTotal]);
 
 	return (
-    
+		<div className='RoutingApp'>
+			
 		<Routes>
 			<Route path="/" element={<Home catalog={catalog} />} />
 			<Route path="/about" element={<Author />} />
@@ -64,6 +68,7 @@ function RoutingApp() {
 						cart={cart}
 						setCart={setCart}
 						cartTotal={cartTotal}
+						userRole={userRole}
 					/>
 				}
 			/>
@@ -92,13 +97,16 @@ function RoutingApp() {
 					/>
 				}
 			/>
-			{/* CRUD OPERATIONS */}
 			{userRole === 'admin' && (
 				<>
-					<Route path="" />
+					<Route path="/item" element={<AddItem />} />
+					<Route path="/item/:id" element={<DeleteItem />} />
+					<Route path="/item/:id" element={<UpdateItem />} />
 				</>
 			)}
 		</Routes>
+
+		</div>
 	);
 }
 

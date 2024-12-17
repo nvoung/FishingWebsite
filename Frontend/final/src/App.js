@@ -14,14 +14,14 @@ import TopNavBar from './TopNavBar';
 import Footer from './footer';
 import Authentication from './Login';
 
-function ShowProducts({ catalog, cart, setCart, cartTotal }) {
+function ShowProducts({ catalog, cart, setCart, cartTotal, userRole }) {
 	const [filteredCatalog, setFilteredCatalog] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [userRole, setUserRole] = useState(null);
+	//const [userRole, setUserRole] = useState(null);
 
 	useEffect(() => {
 		const fetchCategories = async () => {
@@ -157,25 +157,22 @@ function ShowProducts({ catalog, cart, setCart, cartTotal }) {
 									</div>
 									{/* ADMIN BUTTONS */}
 									{userRole === 'admin' && (
-                    console.log(userRole),
 										<div className="mt-3 d-flex justify-content-between">
 											<Button
 												variant="primary"
-												onClick={() =>
-													navigate(`/update-item/${product.id}`, {
-														state: { product },
-													})
-												}
+												onClick={() => navigate(`/add-item`)}
+											>
+												Add Product
+											</Button>
+											<Button
+												variant="primary"
+												onClick={() => navigate(`/update-item/${product.id}`)}
 											>
 												Update
 											</Button>
 											<Button
 												variant="danger"
-												onClick={() =>
-													navigate(`/delete-item/${product.id}`, {
-														state: { product },
-													})
-												}
+												onClick={() => navigate(`/delete-item/${product.id}`)}
 											>
 												Delete
 											</Button>

@@ -88,7 +88,7 @@ app.get('/item/:id', async (req, res) => {
 });
 
 //POST a new item
-app.post('/item', upload.single('image'), async (req, res) => {
+app.post('/add-item', upload.single('image'), async (req, res) => {
 	try {
 		await client.connect();
 		const newDocument = {
@@ -112,7 +112,7 @@ app.post('/item', upload.single('image'), async (req, res) => {
 	}
 });
 //UPDATE an item info
-app.put('/item/:id', async (req, res) => {
+app.put('/update-item/:id', async (req, res) => {
 	const id = Number(req.params.id);
 	console.log('Robot to Update: ', id);
 	try {
@@ -147,7 +147,7 @@ app.put('/item/:id', async (req, res) => {
 	}
 });
 //DELETE a specific item by id
-app.delete('/item/:id', async (req, res) => {
+app.delete('/delete-item/:id', async (req, res) => {
 	try {
 		const id = Number(req.params.id);
 		console.log('Robot to delete: ', id);

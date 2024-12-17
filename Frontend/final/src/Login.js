@@ -23,7 +23,7 @@ const Authentication = ({ setUserRole }) => {
 			);
 			if (user) {
 				// const { role } = await response.json();
-				setUserRole(user);
+				setUserRole(user.setUserRole);
                 navigate('/');
 			} 
             else {
