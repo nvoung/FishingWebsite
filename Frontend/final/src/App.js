@@ -103,6 +103,23 @@ function ShowProducts({ catalog, cart, setCart, cartTotal, userRole }) {
 		</div>
 	));
 
+	const deleteProduct = async (id) => {
+		try {
+			const response = await fetch(`/delete-item/${id}`, {
+				method: 'DELETE',
+			});
+
+			if (response.ok) {
+				alert('Product successfully deleted');
+				navigate('/listproducts'); // Redirect to the products list page
+			} else {
+				alert('Error deleting product');
+			}
+		} catch (error) {
+			alert('An error occurred while deleting the product');
+		}
+	};
+
 	return (
 		<Container
 			fluid
@@ -174,7 +191,7 @@ function ShowProducts({ catalog, cart, setCart, cartTotal, userRole }) {
 											</Button>
 											<Button
 												variant="danger"
-												onClick={() => navigate(`/delete-item/${product.id}`)}
+												onClick={() => deleteProduct(product.id)}
 											>
 												Delete
 											</Button>

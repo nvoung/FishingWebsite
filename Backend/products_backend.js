@@ -6,10 +6,10 @@ const storage = multer.diskStorage({
 		cb(null, 'uploads/'); // Save images in the 'uploads' folder
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + path.extname(file.originalname)); // Unique filename
+		cb(null, Date.now() + '-' + file.originalname); // Unique filename
 	},
 });
-const upload = multer({ storage : storage });
+const upload = multer({ storage: storage });
 // const image = multer({
 // 	dest: 'uploads/', // Directory to save uploaded files
 // 	limits: { fileSize: 10 * 1024 * 1024 }, // Max file size: 10MB
@@ -213,14 +213,17 @@ app.delete('/delete-item/:id', async (req, res) => {
 		const query = { id };
 		//check to see if available
 		const itemDeleted = await db.collection('Final').findOne(query);
-		res.status(200);
-		res.send(itemDeleted);
+		if (!itemDeleted) {
+			return res.status(404).send({ message: 'Item not found' });
+		}
 		// Delete
 		const results = await db.collection('Final').deleteOne(query);
 		console.log(results);
 		// Response to Client
-		res.status(200);
-		res.send(results);
+		if (deletedResult.deletedResult === 1) {
+			res.status(200);
+			res.send(results);
+		}
 	} catch (err) {
 		// Handle synchronous errors
 		console.error('Error in DELETE /contact:', err);
